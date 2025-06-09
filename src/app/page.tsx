@@ -68,7 +68,8 @@ export default function Home() {
               <p className="text-gray-300 text-md leading-relaxed">
                 {selectedProject.description}
               </p>
-              <div className="mt-5 flex flex-wrap gap-3">
+              <p className="mt-5 text-white font-semibold">Tecnologias recomendadas:</p>
+              <div className="mt-2 flex flex-wrap gap-3">
                 {selectedProject.technologies.map((tech, i) => (
                   <Badge
                     key={i}
