@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { juniorProjectIdeas, plenoOrPlusProjectIdeas } from "@/projects/projectIdeas";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Link from "next/link";
 
 type Project = (typeof juniorProjectIdeas)[0] | (typeof plenoOrPlusProjectIdeas)[0];
 
@@ -83,7 +84,7 @@ export default function Home() {
       </main>
 
       <footer className="w-full border-t border-blue-900 py-6 text-center text-sm text-gray-500 bg-black">
-        Desenvolvido por Victor Hugo — tudo 100% gratuito
+        Desenvolvido por <Link href={"https://linkedin.com/in/vhs4"} className="text-blue-400">Victor Hugo (VHS4)</Link> — tudo 100% gratuito
       </footer>
     </div>
   );
