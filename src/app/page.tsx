@@ -1,102 +1,89 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { juniorProjectIdeas, plenoOrPlusProjectIdeas } from "@/projects/projectIdeas";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+type Project = (typeof juniorProjectIdeas)[0] | (typeof plenoOrPlusProjectIdeas)[0];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [level, setLevel] = useState<"junior" | "pleno">("junior");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const getRandomProject = () => {
+    const projects = level === "junior" ? juniorProjectIdeas : plenoOrPlusProjectIdeas;
+    const randomIndex = Math.floor(Math.random() * projects.length);
+    setSelectedProject(projects[randomIndex]);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-black via-[#0d0d2b] to-black text-white">
+      <main className="flex flex-col items-center px-4 py-16 flex-grow">
+        <div className="text-center max-w-2xl mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-500 text-transparent bg-clip-text mb-4">
+            Projetos para seu Portfólio
+          </h1>
+          <p className="text-lg text-gray-400">
+            Gere uma ideia de projeto 100% grátis para praticar e publicar no GitHub!
+          </p>
         </div>
+
+        <Select
+          value={level}
+          onValueChange={(value) => {
+            setLevel(value as "junior" | "pleno");
+            setSelectedProject(null);
+          }}
+        >
+          <SelectTrigger className="w-[180px] mb-6">
+            <SelectValue placeholder="Selecione o nível do projeto" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Nível do Projeto</SelectLabel>
+              <SelectItem value="junior">Projeto Júnior</SelectItem>
+              <SelectItem value="pleno">Projeto Pleno</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+
+        <Button
+          onClick={getRandomProject}
+          className="cursor-pointer bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold px-6 py-3 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out mb-10"
+        >
+          🎲 Gerar Projeto Aleatório
+        </Button>
+
+        {selectedProject && (
+          <Card className="w-full max-w-xl bg-[#111827] border border-blue-800 shadow-2xl transition-all duration-300">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-semibold text-white mb-3">
+                {selectedProject.title}
+              </h2>
+              <p className="text-gray-300 text-md leading-relaxed">
+                {selectedProject.description}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                {selectedProject.technologies.map((tech, i) => (
+                  <Badge
+                    key={i}
+                    className="bg-[#1e293b] border border-cyan-600 text-sm text-white px-3 py-1 rounded-full"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="w-full border-t border-blue-900 py-6 text-center text-sm text-gray-500 bg-black">
+        Desenvolvido por Victor Hugo — tudo 100% gratuito
       </footer>
     </div>
   );
